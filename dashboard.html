@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 캐릭터 관리자 대시보드</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#6200EA',
+secondary: '#9575CD'
+},
+borderRadius: {
+'none': '0px',
+'sm': '4px',
+DEFAULT: '8px',
+'md': '12px',
+'lg': '16px',
+'xl': '20px',
+'2xl': '24px',
+'3xl': '32px',
+'full': '9999px',
+'button': '8px'
+}
+}
+}
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+.dark-theme {
+background-color: #121212;
+color: #ffffff;
+}
+.card-bg {
+background-color: #1E1E1E;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+</style>
+</head>
+<body class="dark-theme min-h-screen">
+<div class="flex">
+<aside class="w-64 h-screen fixed card-bg border-r border-gray-800">
+<div class="p-6">
+<h1 class="font-['Noto Sans'] text-2xl text-primary mb-8 font-bold">AMI</h1>
+<nav class="space-y-2">
+<div>
+<a href="#" class="flex items-center space-x-3 p-3 rounded-button text-white bg-primary">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-dashboard-line"></i>
+</div>
+<span>Dashboard</span>
+</a>
+</div>
+<div class="space-y-1">
+<a href="#" class="flex items-center space-x-3 p-3 rounded-button text-gray-400 hover:bg-gray-800">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-user-line"></i>
+</div>
+<span>User Management</span>
+</a>
+<div class="ml-8 space-y-1">
+<a href="#" class="flex items-center space-x-3 p-2 rounded-button text-gray-400 hover:bg-gray-800 text-sm">
+<span>User List</span>
+</a>
+<a href="#" class="flex items-center space-x-3 p-2 rounded-button text-gray-400 hover:bg-gray-800 text-sm">
+<span>User Groups</span>
+</a>
+<a href="#" class="flex items-center space-x-3 p-2 rounded-button text-gray-400 hover:bg-gray-800 text-sm">
+<span>Permissions</span>
+</a>
+</div>
+</div>
+<div class="space-y-1">
+<a href="#" class="flex items-center space-x-3 p-3 rounded-button text-gray-400 hover:bg-gray-800">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-robot-line"></i>
+</div>
+<span>Character Management</span>
+</a>
+<div class="ml-8 space-y-1">
+<a href="#" class="flex items-center space-x-3 p-2 rounded-button text-gray-400 hover:bg-gray-800 text-sm">
+<span>Character List</span>
+</a>
+<a href="#" class="flex items-center space-x-3 p-2 rounded-button text-gray-400 hover:bg-gray-800 text-sm">
+<span>Templates</span>
+</a>
+<a href="#" class="flex items-center space-x-3 p-2 rounded-button text-gray-400 hover:bg-gray-800 text-sm">
+<span>Categories</span>
+</a>
+</div>
+</div>
+<div class="space-y-1">
+<a href="#" class="flex items-center space-x-3 p-3 rounded-button text-gray-400 hover:bg-gray-800">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-coin-line"></i>
+</div>
+<span>Token/Coin Management</span>
+</a>
+<div class="ml-8 space-y-1">
+<a href="#" class="flex items-center space-x-3 p-2 rounded-button text-gray-400 hover:bg-gray-800 text-sm">
+<span>Transaction History</span>
+</a>
+<a href="#" class="flex items-center space-x-3 p-2 rounded-button text-gray-400 hover:bg-gray-800 text-sm">
+<span>Exchange Rates</span>
+</a>
+<a href="#" class="flex items-center space-x-3 p-2 rounded-button text-gray-400 hover:bg-gray-800 text-sm">
+<span>Wallet Management</span>
+</a>
+</div>
+</div>
+<div class="space-y-1">
+<a href="#" class="flex items-center space-x-3 p-3 rounded-button text-gray-400 hover:bg-gray-800">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-settings-line"></i>
+</div>
+<span>System Settings</span>
+</a>
+<div class="ml-8 space-y-1">
+<a href="#" class="flex items-center space-x-3 p-2 rounded-button text-gray-400 hover:bg-gray-800 text-sm">
+<span>General Settings</span>
+</a>
+<a href="#" class="flex items-center space-x-3 p-2 rounded-button text-gray-400 hover:bg-gray-800 text-sm">
+<span>Security</span>
+</a>
+<a href="#" class="flex items-center space-x-3 p-2 rounded-button text-gray-400 hover:bg-gray-800 text-sm">
+<span>Backup & Restore</span>
+</a>
+</div>
+</div>
+</nav>
+</div>
+</aside>
+<main class="ml-64 flex-1 p-8">
+<div class="grid grid-cols-4 gap-6 mb-8">
+<div class="card-bg p-6 rounded-lg">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-gray-400">Total Users</h3>
+<div class="w-8 h-8 flex items-center justify-center text-primary">
+<i class="ri-user-line ri-xl"></i>
+</div>
+</div>
+<p class="text-3xl font-bold">12,458</p>
+<p class="text-sm text-green-500 mt-2">
+<i class="ri-arrow-up-line"></i>
+2.4% increase from yesterday
+</p>
+</div>
+<div class="card-bg p-6 rounded-lg">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-gray-400">Total Characters</h3>
+<div class="w-8 h-8 flex items-center justify-center text-primary">
+<i class="ri-robot-line ri-xl"></i>
+</div>
+</div>
+<p class="text-3xl font-bold">45,892</p>
+<p class="text-sm text-green-500 mt-2">
+<i class="ri-arrow-up-line"></i>
+5.7% increase from yesterday
+</p>
+</div>
+<div class="card-bg p-6 rounded-lg">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-gray-400">Total Tokens</h3>
+<div class="w-8 h-8 flex items-center justify-center text-primary">
+<i class="ri-coin-line ri-xl"></i>
+</div>
+</div>
+<p class="text-3xl font-bold">32,145</p>
+<p class="text-sm text-green-500 mt-2">
+<i class="ri-arrow-up-line"></i>
+3.2% increase from yesterday
+</p>
+</div>
+<div class="card-bg p-6 rounded-lg">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-gray-400">Daily Active Users</h3>
+<div class="w-8 h-8 flex items-center justify-center text-primary">
+<i class="ri-group-line ri-xl"></i>
+</div>
+</div>
+<p class="text-3xl font-bold">8,742</p>
+<p class="text-sm text-green-500 mt-2">
+<i class="ri-arrow-up-line"></i>
+1.8% increase from yesterday
+</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-6 mb-8">
+<div class="card-bg p-6 rounded-lg">
+<h3 class="text-lg font-semibold mb-4">Real-time Character Creation Status</h3>
+<div id="characterChart" class="w-full h-80"></div>
+</div>
+<div class="card-bg p-6 rounded-lg">
+<h3 class="text-lg font-semibold mb-4">API Usage</h3>
+<div id="apiChart" class="w-full h-80"></div>
+</div>
+</div>
+<div class="card-bg p-6 rounded-lg">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-lg font-semibold">Recently Created Characters</h3>
+<div class="flex space-x-4">
+<div class="relative">
+<input type="text" placeholder="Search characters" class="bg-gray-800 text-white pl-10 pr-4 py-2 rounded-button border-none text-sm">
+<div class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center text-gray-400">
+<i class="ri-search-line"></i>
+</div>
+</div>
+<button class="bg-primary text-white px-4 py-2 rounded-button text-sm whitespace-nowrap">
+Apply Filter
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full">
+<thead>
+<tr class="text-left text-gray-400 border-b border-gray-800">
+<th class="pb-4">Character ID</th>
+<th class="pb-4">Wallet Address</th>
+<th class="pb-4">Created Date</th>
+<th class="pb-4">Token Name</th>
+<th class="pb-4">Status</th>
+<th class="pb-4">Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-gray-800">
+<td class="py-4">#CH25789</td>
+<td>0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D</td>
+<td>2025-03-11</td>
+<td>ETHAN</td>
+<td><span class="px-2 py-1 bg-green-900 text-green-400 rounded-full text-xs">Active</span></td>
+<td>
+<button class="text-primary hover:text-primary-dark">
+<i class="ri-more-line"></i>
+</button>
+</td>
+</tr>
+<tr class="border-b border-gray-800">
+<td class="py-4">#CH25788</td>
+<td>0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984</td>
+<td>2025-03-11</td>
+<td>SOPHIA</td>
+<td><span class="px-2 py-1 bg-green-900 text-green-400 rounded-full text-xs">Active</span></td>
+<td>
+<button class="text-primary hover:text-primary-dark">
+<i class="ri-more-line"></i>
+</button>
+</td>
+</tr>
+<tr class="border-b border-gray-800">
+<td class="py-4">#CH25787</td>
+<td>0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199</td>
+<td>2025-03-11</td>
+<td>OLIVER</td>
+<td><span class="px-2 py-1 bg-yellow-900 text-yellow-400 rounded-full text-xs">Under Review</span></td>
+<td>
+<button class="text-primary hover:text-primary-dark">
+<i class="ri-more-line"></i>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</div>
+<script>
+const characterData = {
+dates: ['3/5', '3/6', '3/7', '3/8', '3/9', '3/10', '3/11'],
+values: [120, 132, 101, 134, 90, 230, 210]
+};
+const apiData = {
+dates: ['3/5', '3/6', '3/7', '3/8', '3/9', '3/10', '3/11'],
+stableDiffusion: [85, 90, 78, 95, 80, 120, 115],
+gpt: [65, 70, 58, 75, 60, 90, 85]
+};
+const characterChart = echarts.init(document.getElementById('characterChart'));
+characterChart.setOption({
+animation: false,
+grid: {
+top: 20,
+right: 20,
+bottom: 30,
+left: 60
+},
+xAxis: {
+type: 'category',
+data: characterData.dates,
+axisLine: {
+lineStyle: {
+color: '#4B5563'
+}
+},
+axisLabel: {
+color: '#9CA3AF'
+}
+},
+yAxis: {
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#4B5563'
+}
+},
+axisLabel: {
+color: '#9CA3AF'
+},
+splitLine: {
+lineStyle: {
+color: '#374151'
+}
+}
+},
+series: [{
+data: characterData.values,
+type: 'line',
+smooth: true,
+symbol: 'none',
+lineStyle: {
+color: '#6200EA'
+},
+areaStyle: {
+color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+offset: 0,
+color: 'rgba(98, 0, 234, 0.3)'
+}, {
+offset: 1,
+color: 'rgba(98, 0, 234, 0.1)'
+}])
+}
+}]
+});
+const apiChart = echarts.init(document.getElementById('apiChart'));
+apiChart.setOption({
+animation: false,
+grid: {
+top: 20,
+right: 20,
+bottom: 30,
+left: 60
+},
+xAxis: {
+type: 'category',
+data: apiData.dates,
+axisLine: {
+lineStyle: {
+color: '#4B5563'
+}
+},
+axisLabel: {
+color: '#9CA3AF'
+}
+},
+yAxis: {
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#4B5563'
+}
+},
+axisLabel: {
+color: '#9CA3AF'
+},
+splitLine: {
+lineStyle: {
+color: '#374151'
+}
+}
+},
+series: [{
+name: 'Stable Diffusion',
+data: apiData.stableDiffusion,
+type: 'line',
+smooth: true,
+symbol: 'none',
+lineStyle: {
+color: 'rgba(87, 181, 231, 1)'
+}
+}, {
+name: 'GPT',
+data: apiData.gpt,
+type: 'line',
+smooth: true,
+symbol: 'none',
+lineStyle: {
+color: 'rgba(141, 211, 199, 1)'
+}
+}],
+legend: {
+data: ['Stable Diffusion', 'GPT'],
+textStyle: {
+color: '#9CA3AF'
+}
+}
+});
+window.addEventListener('resize', function() {
+characterChart.resize();
+apiChart.resize();
+});
+</script>
+</body>
+</html>
